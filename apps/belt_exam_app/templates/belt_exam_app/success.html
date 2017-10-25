@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login & Reg</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>Welcome {{request.session.fname}}</h1>
+        <a href="/" style="margin-left:1200px;">Logout</a>
+        <div class="wrapper" style="display:inline-block;">
+            <div class="left"  style="display:inline-block;width:500px;">
+                <h2>Quotable Quotes</h2>
+                {%for i in quotes%}
+               
+                
+                <p>{{i.quoted_by}}: &nbsp;{{i.quote}}</p>
+                <p>posted by <a href="/users/{{i.user_id}}">{{i.user.name}}&nbsp;&nbsp;&nbsp;</a><a href="/quotes/{{i.id}}">Add to My List</a></p>
+                <br><br>
+                
+              
+                {%endfor%}
+            </div>
+            <div class="right" style="display:inline-block;width:500px; margin-left:200px;vertical-align:top;">
+                <h2>Your Favorites</h2>
+                {%for j in favorites%}
+                <p>{{j.quoted_by}}:&nbsp;&nbsp;{{j.quote}}</p>
+                <p>posted by <a href="/users/{{j.user_id}}">{{j.user.name}}&nbsp;&nbsp;&nbsp;</a><a href="quotes/remove/{{j.id}}">remove from My List</a></p>
+                <br><br>
+                
+                {%endfor%}
+            <form action = "/quotes/add_quote" method="post">
+                {%csrf_token%}
+                Contribute a Quote:
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                <li style="color:red">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                Quoted By:<input type="textbox" name="quoted_by"><br><br>
+                Message : <input type="textarea" name="message"><br><br>
+                <input type="submit" value="Submit">
+
+            </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
