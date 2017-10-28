@@ -9,6 +9,7 @@ def index(request):
     return render(request,'belt_exam_app/index.html')
 
 def process(request):
+    
     errors = User.objects.reg_validator(request.POST)
     if len(errors):
         for tag, error in errors.iteritems():
@@ -17,11 +18,14 @@ def process(request):
     else:
         if 'fname' not in request.session:
             request.session['fname'] = ""
+        if 'id' not in request.session:
+            request.session['id'] = 0
         input_pass = request.POST['pass']
         hash1 = bcrypt.hashpw(input_pass.encode(), bcrypt.gensalt())
         print "password is.....{}....{}".format(input_pass,hash1)
-        User.objects.create(name = request.POST['name'], alias = request.POST['alias'], email = request.POST['email'], password = hash1, dob = request.POST['bday'])
+        u = User.objects.create(name = request.POST['name'], alias = request.POST['alias'], email = request.POST['email'], password = hash1, dob = request.POST['bday'])
         request.session['fname'] = request.POST['name']
+        request.session['id'] = u.id
         return redirect('/quotes')
 def login_process(request):
     errors1 = User.objects.login_validator(request.POST)
@@ -32,8 +36,7 @@ def login_process(request):
     else:
         if 'fname' not in request.session:
             request.session['fname'] = ""
-        if 'id' not in request.session:
-            request.session['id'] = 0
+        
         u = []
         u = User.objects.filter(email = request.POST['login_email'])
         request.session['fname'] = u[0].name
@@ -45,11 +48,14 @@ def quotes(request):
     print "session id is------{}".format(request.session['id'])
     context = {}
     c = User.objects.get(id = request.session['id'])
+    a = c.favorite_quotes.all()
+    b = Quote.objects.all()
+
     context = {
-        'quotes': Quote.objects.all(),
+        'quotes': Quote.objects.exclude(favorite = c),
         'favorites' : c.favorite_quotes.all()
     }
-    print context['favorites']
+
     return render(request,'belt_exam_app/success.html',context)
 
 def add_quote(request):

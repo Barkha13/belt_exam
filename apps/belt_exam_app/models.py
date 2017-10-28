@@ -75,11 +75,11 @@ class Quote(models.Model):
     updated_at = models.DateTimeField(auto_now_add = True)
     objects = QuoteManager()
 
-class Favorite(models.Model):
-    quote = models.ForeignKey(Quote, related_name = "favorites")
-    user = models.ForeignKey(User, related_name = "users_favorites")
-    created_at = models.DateTimeField(auto_now = True)
-    updated_at = models.DateTimeField(auto_now_add = True)
+# class Favorite(models.Model):
+#     quote = models.ForeignKey(Quote, related_name = "favorites")
+#     user = models.ForeignKey(User, related_name = "users_favorites")
+#     created_at = models.DateTimeField(auto_now = True)
+#     updated_at = models.DateTimeField(auto_now_add = True)
 
 
 
